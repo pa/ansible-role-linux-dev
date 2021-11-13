@@ -1,0 +1,39 @@
+---
+- name: install apt packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ install_apt_packages }}"
+
+- name: install pip packages
+  ansible.builtin.pip:
+    name: "{{ item }}"
+  with_items: "{{ install_pip_packages }}"
+
+- name: Add GPG Keys
+  apt_key:
+    url: "{{ item }}"
+    state: present
+  with_items: "{{ install_using_repository.gpg_keys }}"
+
+- name: Add apt repositories
+  apt_repository:
+    repo: "deb {{ item }}"
+    state: present
+  with_items: "{{ install_using_repository.repo_urls }}"
+
+- name: Install using apt repositiries
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ install_using_repository.package_names }}"
+
+- name: Install latest vim package from source
+  make:
+    chdir: "~/{{ create_dev_dirs.2 }}/vim"
+    target: install
+
+- name: Install ohmyzsh
+  ansible.builtin.shell:
+    cmd: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

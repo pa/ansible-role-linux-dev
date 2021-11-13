@@ -1,0 +1,8 @@
+---
+- name: Setup & configure local Dev environment
+  hosts: localhost
+  connection: local
+  become: true
+
+  roles:
+    - role: pa.linux-dev

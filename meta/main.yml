@@ -1,0 +1,27 @@
+---
+dependencies: []
+  
+galaxy_info:
+  role_name: linux-dev
+  author: pa
+  description: This role will bootstrap my linux env with set of apps and custom configurations
+  company: ""
+  license: license (BSD, MIT)
+  min_ansible_version: 2.9
+  platforms:
+      - name: EL
+        versions:
+          - 7
+          - 8
+      - name: Fedora
+        versions:
+          - all
+      - name: Ubuntu
+        versions:
+          - all
+      - name: Debian
+        versions:
+          - all
+
+  galaxy_tags:
+    - dev-env

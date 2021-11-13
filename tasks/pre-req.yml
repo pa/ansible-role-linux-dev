@@ -1,0 +1,13 @@
+---
+- name: Create dev directory structure
+  ansible.builtin.file:
+    path: "~/{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items: "{{ create_dev_dirs }}"
+
+- name: download from source to build
+  ansible.builtin.git:
+    repo: "{{ item }}"
+    dest: "~/{{ create_dev_dirs.2 }}/"
+  with_items: "{{ install_from_source }}"
