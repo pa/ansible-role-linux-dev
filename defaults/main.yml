@@ -78,11 +78,14 @@ install_using_repository:
     - containerd.io
 
 install_using_shell:
-  - sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   - curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 
 install_from_source:
   neovim:
     url: https://github.com/neovim/neovim
     commands: "make -j4 && make install"
+    chdir: "/"
+  fish-shell:
+    url: https://github.com/fish-shell/fish-shell.git
+    commands: "cmake . && make && make install"
     chdir: "/"
