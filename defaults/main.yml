@@ -10,10 +10,32 @@ create_dev_dirs:
   - dev/working
 
 install_apt_packages:
+  - make
+  - build-essential
   - libssl-dev
   - zlib1g-dev
+  - libbz2-dev
   - libpcre3
   - libpcre3-dev
+  - libreadline-dev
+  - libsqlite3-dev
+  - llvm
+  - libncursesw5-dev
+  - xz-utils
+  - tk-dev
+  - libxml2-dev
+  - libxmlsec1-dev
+  - libffi-dev
+  - liblzma-dev
+  - ninja-build
+  - gettext
+  - libtool
+  - libtool-bin
+  - autoconf
+  - automake
+  - g++
+  - pkg-config
+  - doxygen
   - gnupg
   - ca-certificates
   - apt-transport-https
@@ -27,6 +49,7 @@ install_apt_packages:
   - wget
   - tmux
   - myrepos
+  - python3-pip
 
 install_pip_packages:
   - awscli
@@ -35,6 +58,7 @@ install_pip_packages:
   - Jinja2
   - cookiecutter
   - aws-okta-keyman
+  - cmake
 
 install_using_repository:
   gpg_keys:
@@ -53,5 +77,12 @@ install_using_repository:
     - docker-ce-cli
     - containerd.io
 
+install_using_shell:
+  - sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  - curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+
 install_from_source:
-  - https://github.com/vim/vim.git
+  neovim:
+    url: https://github.com/neovim/neovim
+    commands: "make -j4 && make install"
+    chdir: "/"

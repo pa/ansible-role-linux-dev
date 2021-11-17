@@ -4,4 +4,4 @@
   become: true
 
   roles:
-    - pa.linux-dev
+    - pa.linux_dev
