@@ -9,83 +9,105 @@ create_dev_dirs:
   - dev/side
   - dev/working
 
-install_apt_packages:
-  - make
-  - build-essential
-  - libssl-dev
-  - zlib1g-dev
-  - libbz2-dev
-  - libpcre3
-  - libpcre3-dev
-  - libreadline-dev
-  - libsqlite3-dev
-  - llvm
-  - libncursesw5-dev
-  - xz-utils
-  - tk-dev
-  - libxml2-dev
-  - libxmlsec1-dev
-  - libffi-dev
-  - liblzma-dev
-  - ninja-build
-  - gettext
-  - libtool
-  - libtool-bin
-  - autoconf
-  - automake
-  - g++
-  - pkg-config
-  - doxygen
-  - gnupg
-  - ca-certificates
-  - apt-transport-https
-  - software-properties-common
-  - unzip
-  - git
-  - zsh
-  - tree
-  - jq
-  - curl
-  - wget
-  - tmux
-  - myrepos
-  - python3-pip
+install_packages:
+  from_apt:
+    - make
+    - build-essential
+    - ncurses-dev
+    - libncurses5-dev
+    - libpcre2-dev
+    - libssl-dev
+    - zlib1g-dev
+    - libbz2-dev
+    - libpcre3
+    - libpcre3-dev
+    - libreadline-dev
+    - libsqlite3-dev
+    - llvm
+    - libncursesw5-dev
+    - xz-utils
+    - tk-dev
+    - libxml2-dev
+    - libxmlsec1-dev
+    - libffi-dev
+    - liblzma-dev
+    - ninja-build
+    - gettext
+    - libtool
+    - libtool-bin
+    - autoconf
+    - automake
+    - g++
+    - pkg-config
+    - doxygen
+    - gnupg
+    - ca-certificates
+    - apt-transport-https
+    - software-properties-common
+    - fontconfig
+    - unzip
+    - git
+    - zsh
+    - tree
+    - jq
+    - curl
+    - wget
+    - tmux
+    - myrepos
+    - python3-pip
+    #- exa # TODO: Need a work around, Only supported on Ubuntu 20.10 (Groovy Gorilla) and later
+    - peco
+  from_pip:
+    - awscli
+    - molecule[docker,lint]
+    - taskcat
+    - Jinja2
+    - cookiecutter
+    - aws-okta-keyman
+    - cmake
+  from_repo:
+    gpg_keys:
+      - https://apt.releases.hashicorp.com/gpg
+      - https://download.docker.com/linux/ubuntu/gpg
+    repo_urls:
+      - "https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+      - "https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    package_names:
+      - terraform
+      # - packer
+      # - vault
+      # - consul
+      # - nomad
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+  from_command:
+    - curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+  from_source:
+    neovim:
+      url: https://github.com/neovim/neovim
+      commands: "make -j4 && make install"
+      chdir: "/"
+    fish-shell:
+      url: https://github.com/fish-shell/fish-shell
+      commands: "cmake . && make && make install"
+      chdir: "/"
+    ghq:
+      url: https://github.com/x-motemen/ghq
+      commands: "make install"
+      chdir: "/"
 
-install_pip_packages:
-  - awscli
-  - molecule[docker,lint]
-  - taskcat
-  - Jinja2
-  - cookiecutter
-  - aws-okta-keyman
-  - cmake
+nerd_fonts:
+  latest_release_url: https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest
+  fonts:
+    - Hack
+  font_dir: "/usr/local/share/fonts"
+  tmp_dir: nerd-fonts
 
-install_using_repository:
-  gpg_keys:
-    - https://apt.releases.hashicorp.com/gpg
-    - https://download.docker.com/linux/ubuntu/gpg
-  repo_urls:
-    - "https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
-    - "https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-  package_names:
-    - terraform
-    # - packer
-    # - vault
-    # - consul
-    # - nomad
-    - docker-ce
-    - docker-ce-cli
-    - containerd.io
+configure_fish:
+  plugin_manager: curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
+  plugins:
+    - fisher install ilancosman/tide
+    - fisher install jethrokuan/z
 
-install_using_shell:
-  - curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 
-install_from_source:
-  neovim:
-    url: https://github.com/neovim/neovim
-    commands: "make -j4 && make install"
-    chdir: "/"
-  fish-shell:
-    url: https://github.com/fish-shell/fish-shell.git
-    commands: "cmake . && make && make install"
-    chdir: "/"

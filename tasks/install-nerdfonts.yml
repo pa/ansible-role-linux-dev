@@ -1,0 +1,43 @@
+---
+- name: Create tmp dir for NerdFonts
+  ansible.builtin.file:
+    path: "{{ ansible_facts.env.HOME }}/{{ create_dev_dirs.2 }}/{{ nerd_fonts.tmp_dir }}"
+    state: directory
+    mode: u=rwx,g=rw,o=r
+
+- name: Get NerdFonts latest release
+  uri:
+    url: "{{ nerd_fonts.latest_release_url }}"
+    body_format: json
+    return_content: yes
+  register: nf_latest_release
+
+- name: Unarchive NerdFonts files
+  ansible.builtin.unarchive:
+    src: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{ nf_latest_release.json.tag_name}}/{{ item }}.zip"
+    dest: "{{ ansible_facts.env.HOME }}/{{ create_dev_dirs.2 }}/{{ nerd_fonts.tmp_dir }}"
+    remote_src: true
+  with_items: "{{ nerd_fonts.fonts }}"
+
+- name: Find linux compatible NerdFonts
+  ansible.builtin.find:
+    paths: "{{ ansible_facts.env.HOME }}/{{ create_dev_dirs.2 }}/{{ nerd_fonts.tmp_dir }}"
+    use_regex: true
+    patterns: ^(?=.*(.ttf))(?!.*Windows).*$
+  register: fonts_path
+
+- name: Copy NerdFonts to user fonts dir
+  ansible.builtin.copy:
+    src: "{{ item.path }}"
+    dest: "{{ nerd_fonts.font_dir }}"
+    mode: u=rwx,g=rw,o=r
+    remote_src: true
+  with_items: "{{ fonts_path.files }}"
+
+- name: Install NerdFonts
+  command: "fc-cache -f {{ nerd_fonts.font_dir }}"
+
+- name: Cleanup NerdFonts temp files
+  file:
+    state: absent
+    path: "{{ nerd_fonts.tmp_dir }}"

@@ -4,53 +4,50 @@
     name: "{{ item }}"
     state: present
     update_cache: true
-  with_items: "{{ install_apt_packages }}"
+  with_items: "{{ install_packages.from_apt }}"
 
 - name: Install pip packages
   ansible.builtin.pip:
     name: "{{ item }}"
-  with_items: "{{ install_pip_packages }}"
+  with_items: "{{ install_packages.from_pip }}"
 
 - name: Add GPG Keys
   apt_key:
     url: "{{ item }}"
     state: present
-  with_items: "{{ install_using_repository.gpg_keys }}"
+  with_items: "{{ install_packages.from_repo.gpg_keys }}"
 
 - name: Add apt repositories
   apt_repository:
     repo: "deb {{ item }}"
     state: present
-  with_items: "{{ install_using_repository.repo_urls }}"
+  with_items: "{{ install_packages.from_repo.repo_urls }}"
 
-- name: Install using apt repositiries
+- name: Install packages from apt repositiries
   ansible.builtin.package:
     name: "{{ item }}"
     state: present
     update_cache: true
-  with_items: "{{ install_using_repository.package_names }}"
+  with_items: "{{ install_packages.from_repo.package_names }}"
 
-- name: Install package using shell
+- name: Install packages from shell
   ansible.builtin.shell:
     cmd: "{{ item }}"
-  with_items: "{{ install_using_shell }}"
+  with_items: "{{ install_packages.from_command }}"
   failed_when: false
   changed_when: false
 
 - name: Download from source to build
   ansible.builtin.git:
     repo: "{{ item.value.url }}"
-    dest: "~/{{ create_dev_dirs.2 }}/{{ item.key }}"
+    dest: "{{ ansible_facts.env.HOME }}/{{ create_dev_dirs.2 }}/{{ item.key }}"
     force: true
-  with_dict: "{{ install_from_source }}"
-  register: git_module_output
+  with_dict: "{{ install_packages.from_source }}"
 
-- name: Install package from source
-  command: "{{ item.0.commands }}"
+- name: Install packages from source
+  command: "{{ item.value.commands }}"
   args:
-    chdir: "{{ item.1.invocation.module_args.dest }}{{ item.0.chdir }}"
-  with_nested:
-    - "{{ install_from_source.values() }}"
-    - "{{ git_module_output.results }}"
+    chdir: "{{ ansible_facts.env.HOME }}/{{ create_dev_dirs.2 }}/{{ item.key }}{{ item.value.chdir }}"
+  with_dict: "{{ install_packages.from_source }}"
   failed_when: false
   changed_when: false

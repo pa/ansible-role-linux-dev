@@ -1,0 +1,20 @@
+---
+# TODO Fix failures in getting binary location
+- name: Get fish shell binary location
+  command: which fish
+  register: fish
+
+- name: Set fish as default shell
+  user: name="{{ user_name }}" shell="{{ fish.stdout }}"
+
+- name: Install fisher - fish plugin manager
+  shell: |
+    "{{ configure_fish.plugin_manager }}"
+  args:
+    executable: "{{ fish.stdout }}"
+    warn: false
+
+- name: Install fish plugins
+  command: "{{ item }}"
+  with_items:
+    - "{{ configure_fish.plugins }}"

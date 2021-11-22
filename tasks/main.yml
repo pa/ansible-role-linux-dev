@@ -5,3 +5,9 @@
 
 - name: Install packages
   include_tasks: install-packages.yml
+
+- name: Install NerdFonts
+  include_tasks: install-nerdfonts.yml
+
+- name: Configure fish shell
+  include_tasks: configure-fish-shell.yml
