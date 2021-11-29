@@ -36,6 +36,7 @@
 
 - name: Install NerdFonts
   command: "fc-cache -f {{ nerd_fonts.font_dir }}"
+  changed_when: false
 
 - name: Cleanup NerdFonts temp files
   file:

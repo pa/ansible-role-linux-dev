@@ -5,7 +5,7 @@
 create_dev_dirs:
   - dev/archive
   - dev/config
-  - dev/resources/build-from-source
+  - dev/resources
   - dev/side
   - dev/working
   - dev/tmp
@@ -81,8 +81,6 @@ install_packages:
       - docker-ce
       - docker-ce-cli
       - containerd.io
-  from_command:
-    - curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
   from_source:
     fish_shell:
       url: https://github.com/fish-shell/fish-shell
@@ -110,11 +108,3 @@ nerd_fonts:
     - Hack
   font_dir: "/usr/local/share/fonts"
   tmp_dir: nerd-fonts
-
-configure_fish:
-  plugin_manager:
-    - curl -sL https://git.io/fisher | source
-    - fisher install jorgebucaran/fisher
-  plugins:
-    - fisher install ilancosman/tide
-    - fisher install jethrokuan/z

@@ -30,13 +30,6 @@
     update_cache: true
   with_items: "{{ install_packages.from_repo.package_names }}"
 
-- name: Install packages from shell
-  ansible.builtin.shell:
-    cmd: "{{ item }}"
-  with_items: "{{ install_packages.from_command }}"
-  failed_when: false
-  changed_when: false
-
 - name: Download from source to build
   ansible.builtin.git:
     repo: "{{ item.value.url }}"
@@ -51,7 +44,4 @@
   with_subelements:
     - "{{ install_packages.from_source }}"
     - commands
-  notify: Restart ssh
-  # become: true
-  # failed_when: false
-  # changed_when: false
+  changed_when: false
