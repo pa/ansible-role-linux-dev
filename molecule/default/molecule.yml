@@ -5,7 +5,7 @@ driver:
   name: docker
 platforms:
   - name: instance
-    image: ubuntu:20.04
+    image: ubuntu:latest
 provisioner:
   name: ansible
 scenario:

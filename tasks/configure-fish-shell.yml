@@ -5,16 +5,16 @@
   register: fish
 
 - name: Set fish as default shell
-  user: name="{{ user_name }}" shell="{{ fish.stdout }}"
+  user: name="{{ lookup('env', 'USER') }}" shell="{{ fish.stdout }}"
 
-- name: Install fisher - fish plugin manager
-  shell: |
-    "{{ configure_fish.plugin_manager }}"
-  args:
-    executable: "{{ fish.stdout }}"
-    warn: false
+# - name: Install fisher - fish plugin manager
+#   shell: |
+#     "{{ item }}"
+#   args:
+#     executable: "{{ fish.stdout }}"
+#     # warn: false
+#   with_items: "{{ configure_fish.plugin_manager }}"
 
-- name: Install fish plugins
-  command: "{{ item }}"
-  with_items:
-    - "{{ configure_fish.plugins }}"
+# - name: Install fish plugins
+#   command: "{{ item }}"
+#   with_items: "{{ configure_fish.plugins }}"

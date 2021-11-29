@@ -1,7 +1,7 @@
 ---
 - name: Create dev directory structure
   ansible.builtin.file:
-    path: "{{ ansible_facts.env.HOME }}/{{ item }}"
+    path: "{{ lookup('env', 'HOME') }}/{{ item }}"
     state: directory
-    mode: '0755'
+    mode: u=rwx,g=rwx,o=rwx
   with_items: "{{ create_dev_dirs }}"

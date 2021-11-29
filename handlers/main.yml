@@ -1,2 +1,6 @@
 ---
 # handlers file for linux-dev
+- name: Restart ssh
+  service:
+    name: ssh
+    state: restarted

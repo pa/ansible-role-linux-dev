@@ -1,7 +1,7 @@
 ---
 - name: Create tmp dir for NerdFonts
   ansible.builtin.file:
-    path: "{{ ansible_facts.env.HOME }}/{{ create_dev_dirs.2 }}/{{ nerd_fonts.tmp_dir }}"
+    path: "{{ lookup('env', 'HOME') }}/{{ create_dev_dirs.5 }}/{{ nerd_fonts.tmp_dir }}"
     state: directory
     mode: u=rwx,g=rw,o=r
 
@@ -9,19 +9,19 @@
   uri:
     url: "{{ nerd_fonts.latest_release_url }}"
     body_format: json
-    return_content: yes
+    return_content: true
   register: nf_latest_release
 
 - name: Unarchive NerdFonts files
   ansible.builtin.unarchive:
     src: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{ nf_latest_release.json.tag_name}}/{{ item }}.zip"
-    dest: "{{ ansible_facts.env.HOME }}/{{ create_dev_dirs.2 }}/{{ nerd_fonts.tmp_dir }}"
+    dest: "{{ lookup('env', 'HOME') }}/{{ create_dev_dirs.5 }}/{{ nerd_fonts.tmp_dir }}"
     remote_src: true
   with_items: "{{ nerd_fonts.fonts }}"
 
 - name: Find linux compatible NerdFonts
   ansible.builtin.find:
-    paths: "{{ ansible_facts.env.HOME }}/{{ create_dev_dirs.2 }}/{{ nerd_fonts.tmp_dir }}"
+    paths: "{{ lookup('env', 'HOME') }}/{{ create_dev_dirs.5 }}/{{ nerd_fonts.tmp_dir }}"
     use_regex: true
     patterns: ^(?=.*(.ttf))(?!.*Windows).*$
   register: fonts_path

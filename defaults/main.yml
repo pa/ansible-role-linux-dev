@@ -8,6 +8,7 @@ create_dev_dirs:
   - dev/resources/build-from-source
   - dev/side
   - dev/working
+  - dev/tmp
 
 install_packages:
   from_apt:
@@ -47,7 +48,6 @@ install_packages:
     - fontconfig
     - unzip
     - git
-    - zsh
     - tree
     - jq
     - curl
@@ -55,7 +55,7 @@ install_packages:
     - tmux
     - myrepos
     - python3-pip
-    #- exa # TODO: Need a work around, Only supported on Ubuntu 20.10 (Groovy Gorilla) and later
+    # - exa # TODO: Need a work around, Only supported on Ubuntu 20.10 (Groovy Gorilla) and later
     - peco
   from_pip:
     - awscli
@@ -84,18 +84,25 @@ install_packages:
   from_command:
     - curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
   from_source:
+    fish_shell:
+      url: https://github.com/fish-shell/fish-shell
+      commands:
+        - cmake .
+        - make
+        - sudo make install
+      chdir: ""
     neovim:
       url: https://github.com/neovim/neovim
-      commands: "make -j4 && make install"
-      chdir: "/"
-    fish-shell:
-      url: https://github.com/fish-shell/fish-shell
-      commands: "cmake . && make && make install"
-      chdir: "/"
-    ghq:
-      url: https://github.com/x-motemen/ghq
-      commands: "make install"
-      chdir: "/"
+      commands:
+        - make -j4
+        - make install
+      chdir: ""
+      # ghq:
+      #   url: https://github.com/x-motemen/ghq
+      #   commands:
+      #     - make install
+      #   chdir: ""
+      # TODO: Install package from binary
 
 nerd_fonts:
   latest_release_url: https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest
@@ -105,9 +112,9 @@ nerd_fonts:
   tmp_dir: nerd-fonts
 
 configure_fish:
-  plugin_manager: curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
+  plugin_manager:
+    - curl -sL https://git.io/fisher | source
+    - fisher install jorgebucaran/fisher
   plugins:
     - fisher install ilancosman/tide
     - fisher install jethrokuan/z
-
-

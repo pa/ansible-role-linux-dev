@@ -40,14 +40,18 @@
 - name: Download from source to build
   ansible.builtin.git:
     repo: "{{ item.value.url }}"
-    dest: "{{ ansible_facts.env.HOME }}/{{ create_dev_dirs.2 }}/{{ item.key }}"
+    dest: "{{ lookup('env', 'HOME') }}/{{ create_dev_dirs.5 }}/{{ item.value.url | basename }}"
     force: true
   with_dict: "{{ install_packages.from_source }}"
 
 - name: Install packages from source
-  command: "{{ item.value.commands }}"
+  command: "{{ item.1 }}"
   args:
-    chdir: "{{ ansible_facts.env.HOME }}/{{ create_dev_dirs.2 }}/{{ item.key }}{{ item.value.chdir }}"
-  with_dict: "{{ install_packages.from_source }}"
-  failed_when: false
-  changed_when: false
+    chdir: "{{ lookup('env', 'HOME') }}/{{ create_dev_dirs.5 }}/{{ item.0.url | basename }}/{{ item.0.chdir }}"
+  with_subelements:
+    - "{{ install_packages.from_source }}"
+    - commands
+  notify: Restart ssh
+  # become: true
+  # failed_when: false
+  # changed_when: false
